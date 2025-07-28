@@ -10,30 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: ✅ Checkout code
         uses: actions/checkout@v2
-      - name: Test SSH connection
-        run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "echo Connected successfully."
-      - name: Set up SSH
+
+      - name: 🔐 Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Setup known hosts
+      - name: 📡 Add Host to known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy via SSH
+      - name: 🔌 Test SSH Connection
+        run: |
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "echo ✅ SSH connected."
+
+      - name: 🚀 Deploy to Hostinger via SSH
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
+
             cd ${{ secrets.PROJECT_PATH }}
 
             echo "🛠 Putting app in maintenance mode..."
             php artisan down || true
 
-            echo "🔄 Pulling latest changes..."
+            echo "🔄 Pulling latest changes from Git..."
             git pull origin master
 
             echo "📦 Checking if composer install is needed..."
@@ -51,26 +55,26 @@ jobs:
               echo "✅ Skipping composer install - no changes."
             fi
 
-            echo "🗄 Checking if migrations are pending..."
-            OUTDATED=$(php artisan migrate:status | grep 'No' | wc -l)
+            echo "🗄 Checking for pending migrations..."
+            OUTDATED=$(php artisan migrate:status | grep -c '| N ')
             if [ "$OUTDATED" -gt 0 ]; then
-              echo "🗄 Running pending migrations..."
+              echo "🗄 Running migrations..."
               php artisan migrate --force --verbose
             else
-              echo "✅ No migrations needed."
+              echo "✅ No pending migrations."
             fi
 
-            echo "🧹 Clearing caches..."
+            echo "🧹 Clearing and caching..."
             php artisan cache:clear
             php artisan config:clear
             php artisan route:clear
             php artisan view:clear
 
-            echo "🚀 Optimizing application..."
+            echo "🚀 Optimizing..."
             php artisan optimize
 
-            echo "🔓 Bringing app back online..."
+            echo "🔓 App back online..."
             php artisan up
 
-            echo "✅ Deployment completed!"
+            echo "✅ Deployment complete."
           EOF
