@@ -151,16 +151,16 @@
                             <i class="fas fa-file-pdf me-2"></i>Application Form
                         </a>
                         <a href="#" class="link-item">
-                            <i class="fas fa-book me-2"></i>College Prospectus
+                            <i class="fas fa-book me-2"></i>Library
                         </a>
                         <a href="#" class="link-item">
                             <i class="fas fa-graduation-cap me-2"></i>Academic Calendar
                         </a>
-                        <a href="#" class="link-item">
-                            <i class="fas fa-users me-2"></i>Faculty Directory
-                        </a>
                         <a href="{{ route('event.index') }}" class="link-item">
                             <i class="fas fa-chart-line me-2"></i>College Events
+                        </a>
+                          <a href="{{ route('contact-us') }}" class="link-item">
+                            <i class="fas fa-users me-2"></i>Contact Us
                         </a>
                     </div>
                 </div>
