@@ -1,12 +1,20 @@
 @extends('user.layouts.layout')
 @section('header_area')
     <style>
-        /* Notice and Links Section */
-        /* .notice-links-section {
-            padding: 80px 0;
-            margin-top: 50px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        } */
+
+.notice-links-section {
+    margin-top: 0 !important; /* reset */
+    padding-top: 0 !important;
+    clear: both;
+}
+
+/* Ensure on mobile that it pushes down */
+@media (max-width: 767.98px) {
+    .notice-links-section {
+        margin-top: 100px !important; /* increase if needed */
+    }
+}
+
 
         .notice-board {
             background: white;
@@ -65,7 +73,7 @@
 @endsection
 @section('content')
     <!-- Banner Wrapper Start -->
-    <div class="banner-wrapper">
+    <div class="banner-wrapper" style="position: relative; z-index: 2;">
         <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
             <!-- Overlay -->
             <div class="overlay"></div>
@@ -114,7 +122,7 @@
     <!-- Banner Wrapper End -->
 
     <!-- Notice and Important Links Section -->
-    <section class="notice-links-section mt-5" >
+    <section class="notice-links-section mt-5 py-4" style="position: relative; z-index: 1;" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-8" data-aos="fade-right">
